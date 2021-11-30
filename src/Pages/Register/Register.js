@@ -9,15 +9,13 @@ import {
   Typography
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { NavLink, useLocation, useHistory } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
-const Login = () => {
-  const { loginUser, isLoading, authError, googleSignIn } = useAuth()
+const Register = () => {
+  const { user, isLoading, registerUser, authError } = useAuth()
 
-  const location = useLocation()
   const history = useHistory()
-
   const {
     register,
     handleSubmit,
@@ -25,23 +23,34 @@ const Login = () => {
     formState: { errors }
   } = useForm()
   const onSubmit = data => {
+    if (data.password !== data.password1) {
+      alert('password dose not matched')
+      return
+    }
+    registerUser(data.email, data.password, data.name, history)
     console.log(data)
-    loginUser(data.email, data.password, location, history)
   }
 
   return (
     <Container>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid sx={{ mt: 8 }} item xs={6}>
-          <Typography variant='h5'>Login</Typography>
+          <Typography variant='h5'>Register</Typography>
           {!isLoading && (
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
-                {...register('email')}
-                sx={{ width: '70%', m: 3 }}
-                label='Enter Your Email'
-                type='email'
+                {...register('name', { required: true })}
+                sx={{ width: '70%', m: 2 }}
+                label='Enter Your name'
                 variant='standard'
+                type='text'
+              />
+              <TextField
+                {...register('email', { required: true })}
+                sx={{ width: '70%', mb: 2 }}
+                label='Enter Your Email'
+                variant='standard'
+                type='email'
               />
               <TextField
                 sx={{ width: '70%', mb: 2 }}
@@ -50,6 +59,13 @@ const Login = () => {
                 variant='standard'
                 {...register('password', { required: true })}
               />
+              <TextField
+                sx={{ width: '70%', mb: 2 }}
+                type='password'
+                label='Retype Password'
+                variant='standard'
+                {...register('password1', { required: true })}
+              />
               <br />
               <Button
                 type='submit'
@@ -57,26 +73,25 @@ const Login = () => {
                 variant='contained'
               >
                 {' '}
-                Login
+                Register
               </Button>
             </form>
           )}
-
           {isLoading && <CircularProgress />}
-          <Typography>
-            New User? Please <NavLink to='/register'>Register</NavLink>
-          </Typography>
+          {user?.email && (
+            <Alert style={{ textAlign: 'center' }} severity='success'>
+              User Successfully Created
+            </Alert>
+          )}
           {authError && (
             <Alert style={{ textAlign: 'center' }} severity='warning'>
               {authError}
             </Alert>
           )}
-          <Button
-            onClick={() => googleSignIn(location, history)}
-            variant='contained'
-          >
-            Google SignIn
-          </Button>
+
+          <Typography>
+            Already have an account? Please <NavLink to='/login'>Login</NavLink>
+          </Typography>
         </Grid>
 
         <Grid item xs={6}>
@@ -87,4 +102,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register
