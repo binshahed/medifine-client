@@ -15,12 +15,16 @@ import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { Grid } from '@mui/material'
+import Calender from '../Shared/Calendar/Calendar'
+import AppointmentsDashBoard from './AppointmentsDashBoard/AppointmentsDashBoard'
 
 const drawerWidth = 240
 
 function DashBoard (props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [date, setDate] = React.useState(new Date())
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -118,7 +122,14 @@ function DashBoard (props) {
         }}
       >
         <Toolbar />
-        <Typography paragraph>ContentHere</Typography>
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <Calender date={date} setDate={setDate}></Calender>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <AppointmentsDashBoard date={date}></AppointmentsDashBoard>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   )
