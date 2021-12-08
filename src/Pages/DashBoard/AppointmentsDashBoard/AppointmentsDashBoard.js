@@ -12,11 +12,11 @@ const AppointmentsDashBoard = ({ date }) => {
   const { user } = useAuth()
   const [appointments, setAppointments] = useState([])
   useEffect(() => {
-    const url = `http://localhost:5000/appoints?email=${user.email}`
+    const url = `http://localhost:5000/appoints?email=${user.email}&date=${date}`
     fetch(url)
       .then(res => res.json())
       .then(data => setAppointments(data))
-  }, [])
+  }, [date])
 
   return (
     <div>

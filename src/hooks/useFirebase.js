@@ -29,7 +29,9 @@ const useFirebase = () => {
         const user = userCredential.user
         setAuthError('')
         const newUser = { email, displayName: name }
+        saveUser(email, name, 'POST')
         setUser(newUser)
+
         updateProfile(auth.currentUser, {
           displayName: name
         })
@@ -86,6 +88,7 @@ const useFirebase = () => {
         const token = credential.accessToken
         // The signed-in user info.
         const user = result.user
+        saveUser(user.email, user.displayName, 'PUT')
         // ...
       })
       .catch(error => {
@@ -134,6 +137,19 @@ const useFirebase = () => {
         setIsLoading(false)
         setAuthError('')
       })
+  }
+
+  // save user to DB
+  const saveUser = (email, displayName, method) => {
+    const user = { email, displayName }
+
+    fetch('http://localhost:5000/users', {
+      method: method,
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
   }
 
   return {
