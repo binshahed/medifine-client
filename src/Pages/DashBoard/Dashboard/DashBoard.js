@@ -26,6 +26,8 @@ import { Button, Divider } from '@mui/material'
 import DashboardHomeMain from '../DashboardHomeMain/DashboardHome'
 import MakeAdmin from '../MakeAdmin/MakeAdmin'
 import AddDoctor from '../AddDoctor/AddDoctor'
+import useAuth from '../../../hooks/useAuth'
+import AdminRoute from '../../Login/AdminRoute/AdminRoute'
 
 const drawerWidth = 240
 
@@ -33,6 +35,8 @@ function DashBoard (props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   let { path, url } = useRouteMatch()
+
+  const { admin } = useAuth()
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -52,16 +56,20 @@ function DashBoard (props) {
           <Button color='inherit'>Dashboard</Button>
         </Link>
       </Typography>
-      <Typography>
-        <Link to={`${url}/makeAdmin`}>
-          <Button color='inherit'>Make Admin</Button>
-        </Link>
-      </Typography>
-      <Typography>
-        <Link to={`${url}/addDoctor`}>
-          <Button color='inherit'>Add Doctor</Button>
-        </Link>
-      </Typography>
+      {admin && (
+        <Box>
+          <Typography>
+            <Link to={`${url}/makeAdmin`}>
+              <Button color='inherit'>Make Admin</Button>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to={`${url}/addDoctor`}>
+              <Button color='inherit'>Add Doctor</Button>
+            </Link>
+          </Typography>
+        </Box>
+      )}
 
       <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
@@ -156,12 +164,12 @@ function DashBoard (props) {
           <Route exact path={path}>
             <DashboardHomeMain />
           </Route>
-          <Route path={`${path}/makeAdmin`}>
+          <AdminRoute path={`${path}/makeAdmin`}>
             <MakeAdmin />
-          </Route>
-          <Route path={`${path}/addDoctor`}>
+          </AdminRoute>
+          <AdminRoute path={`${path}/addDoctor`}>
             <AddDoctor />
-          </Route>
+          </AdminRoute>
         </Switch>
       </Box>
     </Box>
